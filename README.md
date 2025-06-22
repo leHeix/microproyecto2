@@ -4,6 +4,6 @@
 - Naim Demian
 - Gabriel Jimenez
 - Nikos Valtetsiotis
-- Kelly Lopez
+- Kelly López
 - Santiago Calle
-- Franklin Velasquez
+- Franklin Velásquez

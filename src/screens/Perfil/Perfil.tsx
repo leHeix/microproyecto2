@@ -1,12 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "../../components/ui/avatar";
 import { Button } from "../../components/ui/button";
+import { supabase } from "../../supabase";
+import { useNavigate } from "react-router-dom";
 
 export const Perfil = (): JSX.Element => {
+  const [user, setUser] = useState<any>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) {
+        navigate("/login");
+      } else {
+        setUser(user);
+      }
+    });
+  }, [navigate]);
+
+  if (!user) {
+    return <div>Cargando...</div>;
+  }
+
   return (
     <div className="bg-white flex flex-row justify-center w-full">
       <div className="bg-white overflow-hidden w-[1280px] relative">
@@ -15,8 +34,8 @@ export const Perfil = (): JSX.Element => {
           {/* Profile Image */}
           <div className="flex-shrink-0">
             <Avatar className="w-[435px] h-[435px]">
-              <AvatarImage src="/image-12.png" alt="Profile picture" />
-              <AvatarFallback>User</AvatarFallback>
+              <AvatarImage src={user.user_metadata?.avatar_url || "/image-12.png"} alt="Profile picture" />
+              <AvatarFallback>{user.email?.charAt(0)}</AvatarFallback>
             </Avatar>
           </div>
 
@@ -29,13 +48,13 @@ export const Perfil = (): JSX.Element => {
             <div className="space-y-8 mt-8">
               <div>
                 <h2 className="font-medium text-[28px] tracking-[-0.56px]">
-                  Nombre:
+                  Nombre: {user.user_metadata?.name || "No especificado"}
                 </h2>
               </div>
 
               <div>
                 <h2 className="font-medium text-[28px] tracking-[-0.56px]">
-                  Correo Electrónico:
+                  Correo Electrónico: {user.email}
                 </h2>
               </div>
             </div>

@@ -1,8 +1,22 @@
 import React from "react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
+import { supabase } from "../../supabase";
+import { useNavigate } from "react-router-dom";
 
 export const Login = (): JSX.Element => {
+  const navigate = useNavigate();
+
+  // Función para login con Google
+  const handleGoogleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+    if (error) alert(error.message);
+  };
+
+  // Puedes agregar la función para login con email/contraseña aquí en el futuro
+
   return (
     <div className="bg-white flex flex-row justify-center w-full">
       <div className="bg-white overflow-hidden w-[1280px] relative">
@@ -34,7 +48,10 @@ export const Login = (): JSX.Element => {
                 Inicia Sesión
               </Button>
 
-              <Button className="w-[342px] h-[74px] bg-black text-white rounded-lg shadow-button-shadow text-xl flex items-center justify-center gap-2 mt-8">
+              <Button
+                className="w-[342px] h-[74px] bg-black text-white rounded-lg shadow-button-shadow text-xl flex items-center justify-center gap-2 mt-8"
+                onClick={handleGoogleLogin}
+              >
                 Inicia Sesión con Google
                 <img
                   className="w-[34px] h-[34px] object-cover"

@@ -38,45 +38,6 @@ export const Perfil = (): JSX.Element => {
   return (
     <div className="bg-white flex flex-row justify-center w-full">
       <div className="bg-white overflow-hidden w-[1280px] relative">
-        {/* Header */}
-        <header className="w-full h-[135px] border border-solid border-black flex items-center justify-between px-20">
-          <img
-            className="w-[272px] h-[60px] object-cover"
-            alt="Uniespacios"
-            src="/logo.png"
-          />
-
-          <div className="flex items-center gap-10">
-            <nav className="flex items-center gap-10">
-              <a
-                href="/login"
-                className="font-medium text-black text-base leading-6"
-              >
-                Iniciar Sesión
-              </a>
-              <a
-                href="#"
-                className="font-medium text-black text-base leading-6"
-              >
-                Registrarse
-              </a>
-              <a
-                href="/"
-                className="font-medium text-black text-base leading-6"
-              >
-                Inicio
-              </a>
-            </nav>
-
-            <Button
-              variant="default"
-              className="bg-black text-white text-[13px] rounded-lg shadow-button-shadow"
-            >
-              Mas
-            </Button>
-          </div>
-        </header>
-
         {/* Main Content */}
         <main className="flex flex-col md:flex-row gap-16 px-20 py-16">
           {/* Profile Image */}

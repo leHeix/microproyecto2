@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Separator } from "../../components/ui/separator";
+import { NavigationHeader } from "../../NavigationHeader";
 
 export const Login = (): JSX.Element => {
   // Navigation links data
@@ -37,33 +38,6 @@ export const Login = (): JSX.Element => {
   return (
     <div className="bg-white flex flex-row justify-center w-full">
       <div className="bg-white overflow-hidden w-[1280px] relative">
-        {/* Header */}
-        <header className="w-full h-[135px] flex items-center justify-between px-20 border border-solid border-black">
-          <img
-            className="w-[272px] h-[60px] object-cover"
-            alt="Uniespacios"
-            src="/logo.png"
-          />
-
-          <nav className="flex items-center gap-8">
-            <Link
-              className="font-medium text-black text-base leading-6"
-              to="/login"
-            >
-              Iniciar Sesión
-            </Link>
-            <div className="font-medium text-black text-base leading-6">
-              Registrarse
-            </div>
-            <div className="font-medium text-black text-base leading-6">
-              <a href="/">Inicio</a>
-            </div>
-            <Button className="bg-black text-white rounded-lg shadow-button-shadow text-[13px]">
-              Mas
-            </Button>
-          </nav>
-        </header>
-
         {/* Main Content */}
         <main className="flex flex-row justify-between px-20 mt-16">
           {/* Login Form */}

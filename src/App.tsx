@@ -1,24 +1,48 @@
-import React from "react";
+import { useEffect } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { LandingPage } from "./screens/LandingPage";
 import { Login } from "./screens/Login"
 import { Perfil } from "./screens/Perfil";
+import { supabase } from "./supabase";
+import AppLayout from "./AppLayout";
+import ProtectedRoute from "./ProtectedRoute";
 
-const router = createBrowserRouter([
-  {
-    path: "/*",
-    element: <LandingPage />,
-  },
-  {
-    path: "/login",
-    element: <Login />
-  },
-  {
-    path: "/profile",
-    element: <Perfil />
-  }
-]);
+const App = (): JSX.Element => {
+	useEffect(() => {
+		const getSession = async() => {
+			await supabase.auth.getSession();
+		}
+		getSession();
+	}, []);
 
-export const App = () => {
-  return <RouterProvider router={router} />;
-};
+	const router = createBrowserRouter([
+		{
+			element: <AppLayout />,
+			children: [
+				{
+					element: <ProtectedRoute />,
+					children: [
+						{
+							path: "/profile",
+							element: <Perfil />
+						}
+					]
+				},
+				{
+					path: "/*",
+					element: <LandingPage />,
+				},
+				{
+					path: "/login",
+					element: <Login />
+				},
+			]
+		}
+	]);
+
+	return (
+		<RouterProvider router={router} />
+	)
+}
+
+export default App

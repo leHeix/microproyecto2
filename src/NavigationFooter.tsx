@@ -1,7 +1,7 @@
 import React from "react";
-import { Separator } from "../../../../components/ui/separator";
+import { Separator } from "./components/ui/separator";
 
-export const NavigationFooterSection = (): JSX.Element => {
+export const NavigationFooter = (): JSX.Element => {
   // Navigation links data
   const quickNavLinks = [
     { title: "Navegación Rápida", isHeader: true },

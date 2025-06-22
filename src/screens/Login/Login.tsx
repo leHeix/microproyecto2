@@ -1,40 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
-import { Separator } from "../../components/ui/separator";
-import { NavigationHeader } from "../../NavigationHeader";
 
 export const Login = (): JSX.Element => {
-  // Navigation links data
-  const navigationLinks = [
-    { title: "Inicio", url: "#" },
-    { title: "Reservar", url: "#" },
-    { title: "Perfil", url: "#" },
-  ];
-
-  // Contact information data
-  const contactInfo = [
-    { title: "Correo:", value: "" },
-    { title: "Teléfono:", value: "" },
-    { title: "Dirección: Caracas, Vzla", value: "" },
-  ];
-
-  // Useful links data
-  const usefulLinks = [
-    { title: "Normas de uso", url: "#" },
-    { title: "FAQ", url: "#" },
-    { title: "Soporte técnico", url: "#" },
-  ];
-
-  // Social media icons data
-  const socialIcons = [
-    { src: "/icon.svg", alt: "Icon" },
-    { src: "/icon-2.svg", alt: "Icon" },
-    { src: "/icon-3.svg", alt: "Icon" },
-    { src: "/icon-1.svg", alt: "Icon" },
-  ];
-
   return (
     <div className="bg-white flex flex-row justify-center w-full">
       <div className="bg-white overflow-hidden w-[1280px] relative">
@@ -93,71 +61,6 @@ export const Login = (): JSX.Element => {
             />
           </div>
         </main>
-
-        {/* Footer */}
-        <footer className="w-full mt-32 bg-[#f7f7f7] border border-solid border-black py-12">
-          <div className="px-20">
-            <Separator className="mb-12" />
-
-            <div className="flex justify-between">
-              {/* Brand and Social */}
-              <div className="space-y-8">
-                <h2 className="font-subheading text-[24px] text-black">
-                  UNIESPACIOS
-                </h2>
-
-                <div className="flex items-start gap-2">
-                  {socialIcons.map((icon, index) => (
-                    <div
-                      key={index}
-                      className="w-10 h-10 rounded flex items-center justify-center"
-                    >
-                      <div className="relative w-6 h-6">
-                        <img
-                          className="absolute w-5 h-5 top-0.5 left-0.5"
-                          alt={icon.alt}
-                          src={icon.src}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Navigation Links */}
-              <div className="space-y-6">
-                <h3 className="font-small-text text-black">
-                  Navegación Rápida
-                </h3>
-                {navigationLinks.map((link, index) => (
-                  <div key={index} className="font-small-text text-[#444444]">
-                    {link.title}
-                  </div>
-                ))}
-              </div>
-
-              {/* Contact Info */}
-              <div className="space-y-6">
-                <h3 className="font-small-text text-black">Contacto</h3>
-                {contactInfo.map((info, index) => (
-                  <div key={index} className="font-small-text text-[#444444]">
-                    {info.title} {info.value}
-                  </div>
-                ))}
-              </div>
-
-              {/* Useful Links */}
-              <div className="space-y-6">
-                <h3 className="font-small-text text-black">Enlaces Utiles</h3>
-                {usefulLinks.map((link, index) => (
-                  <div key={index} className="font-small-text text-[#444444]">
-                    {link.title}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </footer>
       </div>
     </div>
   );

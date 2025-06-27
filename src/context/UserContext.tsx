@@ -1,65 +1,127 @@
-import { createContext, ReactNode, useEffect, useState } from 'react';
-import { supabase } from '../supabase';
-import { User } from '@supabase/supabase-js';
+import {
+  createContext,
+  ReactNode,
+  useEffect,
+  useState,
+  useContext,
+} from "react";
+import { supabase } from "../supabase";
+import { User } from "@supabase/supabase-js";
 
-const UserContext = createContext(null as any);
-
-const UserProvider = ({ children }: { children: ReactNode }) => {
-    const [authenticated, setAuthenticated] = useState(false);
-    const [user, setUser] = useState(null as User | null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const getSession = async () => {
-            const {
-                data: { session }
-            } = await supabase.auth.getSession();
-
-            setAuthenticated(!!session);
-
-            if(session?.user)
-            {
-                const { data: profile, error } = await supabase
-                    .from("users")
-                    .select("*")
-                    .eq("id", session.user.id)
-                    .single();
-
-                if(error)
-                {
-                    console.error("Error de perfil:", error.message);
-                    setUser(null)
-                }
-                else
-                {
-                    setUser(profile);
-                }
-            }
-            else
-            {
-                setUser(null);
-            }
-
-            setLoading(false);
-        }
-
-        getSession();
-
-        const { data: listener } = supabase.auth.onAuthStateChange(async (_event, session) => {
-            setAuthenticated(!!session);
-            setUser(session?.user || null);
-        });
-
-        return () => {
-            listener.subscription.unsubscribe();
-        }
-    }, []);
-
-    return  (
-        <UserContext.Provider value={{ authenticated, user, loading }}>
-            {children}
-        </UserContext.Provider>
-    )
+interface UserContextType {
+  authenticated: boolean;
+  user: User | null;
+  loading: boolean;
+  signOut: () => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
-export { UserContext, UserProvider }
+const UserContext = createContext<UserContextType | null>(null);
+
+const UserProvider = ({ children }: { children: ReactNode }) => {
+  const [authenticated, setAuthenticated] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    initializeAuth();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log("Auth state changed:", event);
+
+      if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
+        setAuthenticated(!!session);
+        setUser(session?.user || null);
+      } else if (event === "SIGNED_OUT") {
+        setAuthenticated(false);
+        setUser(null);
+      }
+
+      setLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const initializeAuth = async () => {
+    try {
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
+
+      if (error) {
+        console.error("Error getting session:", error);
+        setAuthenticated(false);
+        setUser(null);
+      } else {
+        setAuthenticated(!!session);
+        setUser(session?.user || null);
+      }
+    } catch (error) {
+      console.error("Error initializing auth:", error);
+      setAuthenticated(false);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signOut = async () => {
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+
+      setAuthenticated(false);
+      setUser(null);
+    } catch (error) {
+      console.error("Error signing out:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const refreshUser = async () => {
+    try {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+      if (error) throw error;
+
+      setUser(user);
+      setAuthenticated(!!user);
+    } catch (error) {
+      console.error("Error refreshing user:", error);
+      setAuthenticated(false);
+      setUser(null);
+    }
+  };
+
+  const value: UserContextType = {
+    authenticated,
+    user,
+    loading,
+    signOut,
+    refreshUser,
+  };
+
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+};
+
+// Hook personalizado para usar el contexto
+const useUser = () => {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error("useUser debe ser usado dentro de un UserProvider");
+  }
+  return context;
+};
+
+export { UserContext, UserProvider, useUser };
